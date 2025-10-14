@@ -7,11 +7,16 @@ import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { UserModule } from '@/user/user.module';
 import { ConfigModule } from '@nestjs/config';
-
-
+import { ArticleModule } from './article/article.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config),ConfigModule.forRoot({isGlobal:true}),TagsModule,UserModule],
+  imports: [
+    TypeOrmModule.forRoot(config),
+    ConfigModule.forRoot({ isGlobal: true }),
+    TagsModule,
+    UserModule,
+    ArticleModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

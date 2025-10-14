@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
 import { LoginUserDto } from '@/user/dto/loginUser.dto';
+import { UpdateUserDto } from '@/user/dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -53,10 +54,7 @@ export class UserService {
   }
   generateUserResponse(user: UserEntity): IUserResponse {
     if (!user.id) {
-      throw new HttpException(
-        'user data is missing',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('user data is missing', HttpStatus.BAD_REQUEST);
     }
     return {
       user: { ...user, token: this.generateJWTToken(user) },
@@ -93,5 +91,16 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async updateUser(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    const user = await this.userFindById(userId);
+
+    Object.assign(user, updateUserDto);
+
+    return  this.userRepository.save(user);
   }
 }
