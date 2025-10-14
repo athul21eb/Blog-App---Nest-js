@@ -29,7 +29,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     } catch (error) {
       req.user = new UserEntity();
-      console.log(error)
+      
       return;
     }finally{
       next();
