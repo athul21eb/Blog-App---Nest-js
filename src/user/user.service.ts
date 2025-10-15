@@ -56,6 +56,7 @@ export class UserService {
     if (!user.id) {
       throw new HttpException('user data is missing', HttpStatus.BAD_REQUEST);
     }
+    delete user?.password;
     return {
       user: { ...user, token: this.generateJWTToken(user) },
     };
@@ -79,7 +80,7 @@ export class UserService {
       throw new HttpException('Invalid Password', HttpStatus.BAD_REQUEST);
     }
 
-    delete userFound.password;
+    
     return this.generateUserResponse(userFound);
   }
 
@@ -100,6 +101,7 @@ export class UserService {
     const user = await this.userFindById(userId);
 
     Object.assign(user, updateUserDto);
+
 
     return  this.userRepository.save(user);
   }
