@@ -3,6 +3,7 @@ import { CreateArticleDto } from '@/article/dto/createArticle.dto';
 import { UpdateArticleDto } from '@/article/dto/updateArticle.dto';
 import { IAllArticlesResponse } from '@/article/types/allArticlesResponse.interface';
 import { IArticleResponse } from '@/article/types/articleResponse.interface';
+import { ProfilesService } from '@/profiles/profiles.service';
 import { UserEntity } from '@/user/user.entity';
 import { UserService } from '@/user/user.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -18,8 +19,41 @@ export class ArticleService {
     private readonly articleRepository: Repository<ArticleEntity>,
 
     private readonly userService: UserService,
+    private readonly profilesService: ProfilesService,
   ) {}
 
+  async findAritlcesByFeed(
+    currentUserId: string,
+    query: any,
+  ): Promise<IAllArticlesResponse> {
+    const follows = await this.profilesService.findAllFollowings(currentUserId);
+
+    if (!follows.length) {
+      return { articles: [], articlesCount: 0 };
+    }
+
+    const followingIds = follows.map((follow) => follow.followingId);
+
+    const queryBuilder = this.articleRepository
+      .createQueryBuilder('articles')
+      .leftJoinAndSelect('articles.author', 'author')
+      .andWhere('articles.authorId  IN  (:...followingIds)', { followingIds });
+
+        queryBuilder.orderBy('articles.createdAt', 'DESC');
+
+    if (query.limit) {
+      queryBuilder.limit(query.limit);
+    }
+
+    if (query.offset) {
+      queryBuilder.offset(query.offset);
+    }
+
+    const articles = await queryBuilder.getMany();
+    const articlesCount = await queryBuilder.getCount();
+
+    return {articles,articlesCount}
+  }
   async findAllArticles(
     currentUserId: string,
     query: any,
@@ -74,8 +108,7 @@ export class ArticleService {
 
     let favoritedIds: string[] = [];
     if (currentUserId) {
-
-      const currentUser = await this.userService.userFindById(currentUserId)
+      const currentUser = await this.userService.userFindById(currentUserId);
 
       favoritedIds = currentUser.favorites.map((article) => article.id);
     }

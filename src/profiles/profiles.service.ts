@@ -15,6 +15,11 @@ export class ProfilesService {
     private readonly userService: UserService,
   ) {}
 
+  async findAllFollowings(currentUserId: string): Promise<FollowsEntity[]> {
+    return await this.followRepository.find({
+      where: { followerId: currentUserId },
+    });
+  }
   async isFollowedCheck(
     followerId: string,
     followingProfileId: string,

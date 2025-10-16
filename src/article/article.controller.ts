@@ -31,8 +31,20 @@ export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Get()
-  async findAllArticles(@User("id") currentUserId:string ,@Query() query: any): Promise<IAllArticlesResponse> {
-    return await this.articleService.findAllArticles(currentUserId,query);
+  async findAllArticles(
+    @User('id') currentUserId: string,
+    @Query() query: any,
+  ): Promise<IAllArticlesResponse> {
+    return await this.articleService.findAllArticles(currentUserId, query);
+  }
+
+  @Get('feed')
+  @UseGuards(AuthGuard)
+  async getArticlesByFeed(
+    @User('id') currentUserId: string,
+    @Query() query: any,
+  ): Promise<IAllArticlesResponse> {
+    return await this.articleService.findAritlcesByFeed(currentUserId, query);
   }
 
   @Post()
@@ -108,7 +120,7 @@ export class ArticleController {
   async removeArticleFromFavorites(
     @User('id') currentUserId: string,
     @Param('slug') slug: string,
-  ) :Promise<IArticleResponse>{
-    return  this.articleService.removeArticleFromFavortie(currentUserId, slug);
+  ): Promise<IArticleResponse> {
+    return this.articleService.removeArticleFromFavortie(currentUserId, slug);
   }
 }
