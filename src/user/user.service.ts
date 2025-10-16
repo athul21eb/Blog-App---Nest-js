@@ -108,11 +108,16 @@ export class UserService {
     return user;
   }
 
-  async userFindByUsername(username: string): Promise<UserEntity | null> {
-    const user = await this.userRepository.findOne({
-      where: { username },
-      relations: ['favorites'],
-    });
+  async userFindByUsername(
+    username: string,
+    favorite: boolean = true,
+  ): Promise<UserEntity | null> {
+    const options: any = { where: { username ,} };
+
+    if (favorite) {
+      options.relations = ['favorites'];
+    }
+    const user = await this.userRepository.findOne(options);
 
     if (!user) {
       return null;

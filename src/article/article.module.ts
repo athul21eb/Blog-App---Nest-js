@@ -8,7 +8,7 @@ import { UserModule } from '@/user/user.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([ArticleEntity]),
-    forwardRef(() => UserModule),
+    UserModule
   ],
   controllers: [ArticleController],
   providers: [ArticleService],

@@ -1,4 +1,5 @@
 import { ArticleModule } from '@/article/article.module';
+import { ProfilesModule } from '@/profiles/profiles.module';
 import { AuthMiddleware } from '@/user/middlewares/auth.middleware';
 import { UserController } from '@/user/user.controller';
 import { UserEntity } from '@/user/user.entity';
@@ -15,7 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
-    forwardRef(() => ArticleModule),
+  
   ],
   controllers: [UserController],
   providers: [UserService],
