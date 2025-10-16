@@ -23,13 +23,13 @@ export class AuthMiddleware implements NestMiddleware {
     try {
       const decode = await verify(token, process.env.JWT_SECRET);
 
-      const user = await this.userService.userFindById(decode.id);
+      const user = await this.userService.userFindById(decode.id,false);
 
       req.user = user;
 
     } catch (error) {
       req.user = new UserEntity();
-      
+
       return;
     }finally{
       next();

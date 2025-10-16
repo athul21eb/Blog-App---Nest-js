@@ -1,8 +1,10 @@
+import { ArticleModule } from '@/article/article.module';
 import { AuthMiddleware } from '@/user/middlewares/auth.middleware';
 import { UserController } from '@/user/user.controller';
 import { UserEntity } from '@/user/user.entity';
 import { UserService } from '@/user/user.service';
 import {
+  forwardRef,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -11,10 +13,13 @@ import {
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => ArticleModule),
+  ],
   controllers: [UserController],
   providers: [UserService],
-  exports:[UserService]
+  exports: [UserService],
 })
 export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

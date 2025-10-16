@@ -52,6 +52,10 @@ export class UserService {
       process.env.JWT_SECRET,
     );
   }
+
+  async saveUser(user: UserEntity): Promise<UserEntity> {
+    return this.userRepository.save(user);
+  }
   generateUserResponse(user: UserEntity): IUserResponse {
     if (!user.id) {
       throw new HttpException('user data is missing', HttpStatus.BAD_REQUEST);
@@ -80,15 +84,38 @@ export class UserService {
       throw new HttpException('Invalid Password', HttpStatus.BAD_REQUEST);
     }
 
-    
     return this.generateUserResponse(userFound);
   }
 
-  async userFindById(id: string): Promise<UserEntity> {
-    const user = await this.userRepository.findOne({ where: { id: id } });
+  async userFindById(
+    id: string,
+    favorites: boolean = true,
+  ): Promise<UserEntity> {
+    const options: any = { where: { id: id } };
+
+    if (favorites) {
+      options.relations = ['favorites'];
+    }
+    const user = await this.userRepository.findOne(options);
 
     if (!user) {
-      throw new HttpException(' user is not found ', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        `User with ID ${id} is  not found `,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return user;
+  }
+
+  async userFindByUsername(username: string): Promise<UserEntity | null> {
+    const user = await this.userRepository.findOne({
+      where: { username },
+      relations: ['favorites'],
+    });
+
+    if (!user) {
+      return null;
     }
 
     return user;
@@ -102,7 +129,6 @@ export class UserService {
 
     Object.assign(user, updateUserDto);
 
-
-    return  this.userRepository.save(user);
+    return this.userRepository.save(user);
   }
 }

@@ -1,5 +1,5 @@
 import { ArticleEntity } from '@/article/article.entity';
 
 export interface IArticleResponse {
-  article: Omit<ArticleEntity,"author.password">;
+  article: ArticleEntity;
 }
