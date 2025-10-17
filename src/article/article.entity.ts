@@ -1,10 +1,12 @@
 
+import { CommentsEntity } from '../comments/comments.entity';
 import { UserEntity } from '../user/user.entity';
 import {
   BeforeUpdate,
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -42,6 +44,9 @@ export class ArticleEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.article)
   author: UserEntity;
+
+  @OneToMany(()=>CommentsEntity,(comment)=>comment.article)
+  comments:CommentsEntity[]
 
   @BeforeUpdate()
   changeUpadateTime() {

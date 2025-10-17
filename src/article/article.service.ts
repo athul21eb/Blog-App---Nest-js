@@ -199,6 +199,7 @@ export class ArticleService {
       throw new HttpException('article not found', HttpStatus.NOT_FOUND);
     }
 
+    if(article?.author?.password) delete article?.author?.password
     return article;
   }
 

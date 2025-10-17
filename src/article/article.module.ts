@@ -14,5 +14,6 @@ import { ProfilesModule } from '@/profiles/profiles.module';
   ],
   controllers: [ArticleController],
   providers: [ArticleService],
+  exports:[ArticleService]
 })
 export class ArticleModule {}
