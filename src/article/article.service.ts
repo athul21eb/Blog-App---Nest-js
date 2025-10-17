@@ -79,9 +79,9 @@ export class ArticleService {
       }
     }
 
-    if (query.favorite) {
-      console.log(query.favorite);
-      const user = await this.userService.userFindByUsername(query.favorite);
+    if (query.favorited) {
+      console.log(query.favorited);
+      const user = await this.userService.userFindByUsername(query.favorited);
       if (!user?.favorites || user.favorites.length === 0) {
         return { articles: [], articlesCount: 0 };
       } else {

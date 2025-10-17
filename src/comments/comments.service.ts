@@ -5,9 +5,10 @@ import { ICommentResponse } from '@/comments/types/commentResponse.interface';
 import { ICommentsResponse } from '@/comments/types/commentsResponse.interface';
 import { ProfilesService } from '@/profiles/profiles.service';
 import { UserEntity } from '@/user/user.entity';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsUUID } from 'class-validator';
+import { DeleteResult, Repository } from 'typeorm';
 
 @Injectable()
 export class CommentsService {
@@ -36,7 +37,7 @@ export class CommentsService {
           image: true,
         },
       },
-      order:{createdAt:"DESC"}
+      order: { createdAt: 'DESC' },
     });
 
     if (!comments.length) {
@@ -74,6 +75,36 @@ export class CommentsService {
     const savedComment = await this.commentsRepository.save(newComment);
 
     return this.generateCommentResponse(savedComment);
+  }
+
+  async deleteComment(
+    slug: string,
+    currentUserId: string,
+    commentId: string,
+  ): Promise<ICommentResponse> {
+    const article = await this.articleService.findArticleByslug(slug);
+
+    if (!article) {
+      throw new HttpException('article is not found', HttpStatus.NOT_FOUND);
+    }
+    const comment = await this.commentsRepository.findOne({
+      where: { id: commentId, article: { id: article.id } },
+    });
+
+    if (!comment) {
+      throw new HttpException('comment is not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (comment.author.id !== currentUserId) {
+      throw new HttpException(
+        "You are not the commenter !!,You can't delete this comment",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const deletedComment = await this.commentsRepository.remove(comment);
+
+    return this.generateCommentResponse(deletedComment);
   }
 
   generateCommentResponse(comment: CommentsEntity): ICommentResponse {

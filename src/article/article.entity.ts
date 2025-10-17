@@ -1,4 +1,3 @@
-
 import { CommentsEntity } from '../comments/comments.entity';
 import { UserEntity } from '../user/user.entity';
 import {
@@ -41,12 +40,11 @@ export class ArticleEntity {
   @Column({ default: 0 })
   favoritesCount: number;
 
-
   @ManyToOne(() => UserEntity, (user) => user.article)
   author: UserEntity;
 
-  @OneToMany(()=>CommentsEntity,(comment)=>comment.article)
-  comments:CommentsEntity[]
+  @OneToMany(() => CommentsEntity, (comment) => comment.article,)
+  comments: CommentsEntity[];
 
   @BeforeUpdate()
   changeUpadateTime() {

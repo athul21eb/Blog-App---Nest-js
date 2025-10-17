@@ -22,29 +22,7 @@ import {
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('user')
-  @UsePipes(new ValidationPipe())
-  async createUser(
-    @Body('user') createUserDto: CreateUserDto,
-  ): Promise<IUserResponse> {
-    return await this.userService.createUser(createUserDto);
-  }
-
-  @Get('user/login')
-  @UsePipes(new ValidationPipe())
-  async loginUser(
-    @Body('user') loginUserDto: LoginUserDto,
-  ): Promise<IUserResponse> {
-    return await this.userService.loginUser(loginUserDto);
-  }
-
-  @Get('user')
-  @UseGuards(AuthGuard)
-  async getCurrentUser(@User() user): Promise<IUserResponse> {
-    return this.userService.generateUserResponse(user);
-  }
-
-  @Put('user')
+   @Put('user')
   @UseGuards(AuthGuard)
   @UsePipes(new ValidationPipe())
   async updateUserController(
@@ -55,4 +33,29 @@ export class UserController {
 
     return this.userService.generateUserResponse(updatedUser);
   }
+
+  @Post('users')
+  @UsePipes(new ValidationPipe())
+  async createUser(
+    @Body('user') createUserDto: CreateUserDto,
+  ): Promise<IUserResponse> {
+    return await this.userService.createUser(createUserDto);
+  }
+
+  @Post('users/login')
+  @UsePipes(new ValidationPipe())
+  async loginUser(
+    @Body('user') loginUserDto: LoginUserDto,
+  ): Promise<IUserResponse> {
+console.log(loginUserDto,"kkkkkkkkkkk")
+    return await this.userService.loginUser(loginUserDto);
+  }
+
+  @Get('user')
+  @UseGuards(AuthGuard)
+  async getCurrentUser(@User() user): Promise<IUserResponse> {
+    return this.userService.generateUserResponse(user);
+  }
+
+
 }

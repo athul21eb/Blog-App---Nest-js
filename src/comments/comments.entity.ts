@@ -26,7 +26,9 @@ export class CommentsEntity {
   @ManyToOne(() => UserEntity, { eager: true })
   author: UserEntity;
 
-  @ManyToOne(() => ArticleEntity, (article) => article.comments)
+  @ManyToOne(() => ArticleEntity, (article) => article.comments, {
+    onDelete: 'CASCADE',
+  })
   article: ArticleEntity;
 
   @BeforeUpdate()

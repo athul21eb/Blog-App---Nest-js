@@ -14,5 +14,8 @@ export class UpdateUserDto {
    @IsOptional()
   @IsNotEmpty()
   readonly image: string;
+   @IsOptional()
+  @IsNotEmpty()
+  readonly password: string;
 
 }
