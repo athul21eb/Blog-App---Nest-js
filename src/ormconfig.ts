@@ -18,7 +18,7 @@ const config: PostgresConnectionOptions = {
   logging: ['error'], // Enable logging
   // synchronize:true,/// dont give true in production code " it will reset your database in every restart"
   migrationsTableName: 'migration',
-  migrations: [join(__dirname, '/migrations/**/*.ts')],
+  migrations: [join(__dirname, '/migrations/**/*.{ts,js}')],
 };
 
 export const AppDatasource = new DataSource(config);
