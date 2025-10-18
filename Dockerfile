@@ -29,10 +29,8 @@ COPY --from=builder /usr/src/app/dist ./dist
 
 
 
-
 # Expose port
 EXPOSE 3000
 
-
-# Run migrations and start the app
-CMD ["sh", "-c", "npx typeorm-ts-node-commonjs migration:run -d dist/src/ormconfig.js && node dist/main.js"]
+# Start the app
+CMD ["node", "dist/main.js"]
