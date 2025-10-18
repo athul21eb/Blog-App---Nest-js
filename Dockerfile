@@ -27,8 +27,7 @@ RUN npm install --only=production
 # Copy compiled code from builder
 COPY --from=builder /usr/src/app/dist ./dist
 
-# Copy any necessary files (like .env or public)
-COPY --from=builder /usr/src/app/.env ./
+
 
 # Expose port
 EXPOSE 3000

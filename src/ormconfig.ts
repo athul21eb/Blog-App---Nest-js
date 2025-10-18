@@ -13,7 +13,7 @@ const config: PostgresConnectionOptions = {
   username: process.env.POSTGRES_USER || 'devuser',
   password: process.env.POSTGRES_PASSWORD || '12346',
   database: process.env.POSTGRES_DB || 'blog',
-
+   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   entities: [join(__dirname, '/**/*.entity.{ts,js}')],
   logging: ['error'], // Enable logging
   // synchronize:true,/// dont give true in production code " it will reset your database in every restart"
