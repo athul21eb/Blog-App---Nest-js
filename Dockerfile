@@ -27,13 +27,12 @@ RUN npm install --only=production
 # Copy compiled code from builder
 COPY --from=builder /usr/src/app/dist ./dist
 
-# Copy migration config & migration files
-COPY --from=builder /usr/src/app/src/ormconfig.ts ./src/ormconfig.ts
-COPY --from=builder /usr/src/app/src/migrations ./src/migrations
+
 
 
 # Expose port
 EXPOSE 3000
 
-# Run migrations first, then start the app
-CMD ["sh", "-c", "npm run migration:run && node dist/main.js"]
+
+# Run migrations and start the app
+CMD ["sh", "-c", "npx typeorm-ts-node-commonjs migration:run -d dist/src/ormconfig.js && node dist/main.js"]
